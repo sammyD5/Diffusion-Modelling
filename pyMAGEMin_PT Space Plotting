@@ -1,0 +1,37 @@
+from pyMAGEMin.functions import MAGEMin_functions
+import juliacall
+from juliacall import Main as jl, convert as jlconvert
+import underworld3 as uw
+import pandas as pd
+from scipy import interpolate
+import numpy as np
+# import pyMAGEMin
+import matplotlib.pyplot as plt
+import os
+# from matplotlib import colors
+from scipy.optimize import minimize
+# import shapely
+from datetime import datetime
+import pytz
+# from joblib import Parallel, delayed
+from tqdm import tqdm
+# from contextlib import contextmanager
+from tqdm.notebook import tqdm   # notebook-friendly version
+import gc
+import time
+
+datetime_in_Perth = datetime.now(pytz.timezone('Australia/Perth'))
+current_time_str = datetime_in_Perth.strftime('%Y-%m-%d_%H-%M')
+  
+outputDir = f'/Users/sdas/Documents/TB_diffusion_modelling/output/Southern India/TB_Files/'
+imageDir = f'{outputDir}/Images_{current_time_str}'
+fileDir = f'{outputDir}/Files_{current_time_str}'
+
+# Create directories if they don't exist
+if uw.mpi.rank == 0:
+    os.makedirs(outputDir, exist_ok=True)
+    os.makedirs(imageDir, exist_ok=True)
+    os.makedirs(fileDir, exist_ok=True)
+
+MAGEMin_C = juliacall.newmodule("MAGEMin_C")
+MAGEMin_C.seval("using MAGEMin_C")
